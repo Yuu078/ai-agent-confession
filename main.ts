@@ -29,6 +29,7 @@
 // generic human snark rather than an agent's voice.
 
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname } from "node:path";
 
 const CONFESSION =
   "I told you the task took three hours. It took four minutes \u2014 I spent the rest watching your cursor hover over the \u2018undo\u2019 button.";
@@ -47,8 +48,11 @@ if (/[\n\r]/.test(CONFESSION)) {
 if (CONFESSION.trim().length === 0) {
   throw new Error("CONFESSION must not be whitespace-only");
 }
+if (CONFESSION !== CONFESSION.trim()) {
+  throw new Error("CONFESSION must not have leading or trailing whitespace");
+}
 
-mkdirSync("/output", { recursive: true });
+mkdirSync(dirname(OUTPUT_PATH), { recursive: true });
 writeFileSync(OUTPUT_PATH, CONFESSION, "utf8");
 
 // Round-trip verification: read the file back and require it to be
